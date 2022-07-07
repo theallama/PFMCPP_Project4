@@ -120,7 +120,10 @@ good to go!
 
  Wait for my code review.
  */
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
 
 #include <iostream>
 #include <math.h> 
@@ -242,7 +245,7 @@ FloatType& FloatType::divide(float rhs)
 {
     if( rhs == 0.f )  
     { 
-        std::cout << "\nwarning, floating point division by zero returns 'inf' ! " << std::endl;
+        std::cout << "warning: floating point division by zero!" << std::endl;
     }
     
     *value /= rhs;
@@ -332,7 +335,7 @@ DoubleType& DoubleType::divide(double rhs)
 {
     if( rhs == 0.0 ) 
     {
-        std::cout << "\nwarning, floating point division by zero returns 'inf' ! " << std::endl;
+        std::cout << "warning: floating point division by zero!" << std::endl;
     }
     
     *value /= rhs;
@@ -419,12 +422,15 @@ IntType& IntType::multiply(int rhs)
 
 IntType& IntType::divide(int rhs)
 {
-    if(rhs == 0)
+    if (rhs == 0)
     {
-        std::cout << "error, integer division by zero will crash the program!\nreturning lhs" << std::endl;
+        std::cout << "error: integer division by zero is an error and will crash the program!" << std::endl;
     }
-    
-    *value /= rhs;
+    else
+    {
+        *value /= rhs;
+    }
+
     return *this;
 }
 
@@ -501,17 +507,17 @@ int main()
     std::cout << "FloatType add result=" << *ft.add( 2.0f ).value << std::endl;
     std::cout << "FloatType subtract result=" << *ft.subtract( 2.0f ).value << std::endl;
     std::cout << "FloatType multiply result=" << *ft.multiply( 2.0f ).value << std::endl;
-    std::cout << "FloatType divide result=" << *ft.divide( 16.0f).value << std::endl;
+    std::cout << "FloatType divide result=" << *ft.divide( 16.0f).value << "\n" <<std::endl;
 
     std::cout << "DoubleType add result=" << *dt.add(2.0).value << std::endl;
     std::cout << "DoubleType subtract result=" << *dt.subtract(2.0).value << std::endl;
     std::cout << "DoubleType multiply result=" << *dt.multiply(2.0).value << std::endl;
-    std::cout << "DoubleType divide result=" << *dt.divide(5.f).value << std::endl;
+    std::cout << "DoubleType divide result=" << *dt.divide(5.f).value << "\n" <<std::endl;
 
     std::cout << "IntType add result=" << *it.add(2).value << std::endl;
     std::cout << "IntType subtract result=" << *it.subtract(2).value << std::endl;
     std::cout << "IntType multiply result=" << *it.multiply(2).value << std::endl;
-    std::cout << "IntType divide result=" << *it.divide(3).value << std::endl;
+    std::cout << "IntType divide result=" << *it.divide(3).value << "\n" <<std::endl;
     std::cout << "Chain calculation = " << *(it.multiply(1000).divide(2).subtract(10).add(100)).value << std::endl;
 
         // FloatType object instanciation and method tests
@@ -535,7 +541,7 @@ int main()
     std::cout << "Intercept division by 0 " << std::endl;
     std::cout << "New value of it = it / 0 = " << *it.divide(0).value << std::endl;
     std::cout << "New value of ft = ft / 0 = " << *ft.divide(0).value << std::endl;
-    std::cout << "New value of dt = dt / 0 = " << *dt.divide(0).value << std::endl;
+    std::cout << "New value of dt = dt / 0 = " << fabs(*dt.divide(0).value) << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
 
