@@ -120,10 +120,7 @@ good to go!
 
  Wait for my code review.
  */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-conversion"
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic ignored "-Wdouble-promotion"
+
 
 #include <iostream>
 #include <math.h> 
@@ -493,6 +490,8 @@ IntType& IntType::divide(const FloatType& rhs)
 {
     return subtract(*rhs.value);
 }
+
+void test(int) { }
 
 int main()
 {   
