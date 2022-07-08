@@ -371,12 +371,12 @@ DoubleType& DoubleType::subtract(const IntType& rhs)
 
 DoubleType& DoubleType::multiply(const IntType& rhs)
 {
-    return subtract(*rhs.value);
+    return multiply(*rhs.value);
 }
 
 DoubleType& DoubleType::divide(const IntType& rhs)
 {
-    return subtract(*rhs.value);
+    return divide(*rhs.value);
 }
 
 DoubleType& DoubleType::add(const DoubleType& rhs)
@@ -391,12 +391,12 @@ DoubleType& DoubleType::subtract(const DoubleType& rhs)
 
 DoubleType& DoubleType::multiply(const DoubleType& rhs)
 {
-    return subtract(*rhs.value);
+    return multiply(*rhs.value);
 }
 
 DoubleType& DoubleType::divide(const DoubleType& rhs)
 {
-    return subtract(*rhs.value);
+    return divide(*rhs.value);
 }
 
 IntType& IntType::add(int rhs)
