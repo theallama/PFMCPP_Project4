@@ -136,7 +136,7 @@ struct FloatType
     FloatType& multiply(float rhs);
     FloatType& divide(float rhs);
 
-    operator float() 
+    operator float() const
     {
         return *value;
     }
@@ -159,7 +159,7 @@ struct DoubleType
     DoubleType& multiply(double rhs);
     DoubleType& divide(double rhs);
 
-    operator float() 
+    operator double() const 
     {
         return *value;
     }
@@ -182,7 +182,7 @@ struct IntType
     IntType& multiply(int rhs);
     IntType& divide(int rhs);
 
-    operator int()
+    operator int() const
     {
         return *value;
     }
@@ -343,7 +343,7 @@ int main()
     std::cout << "Initial value of it: " << it << std::endl;
     // --------
     std::cout << "Use of function concatenation (mixed type arguments) " << std::endl;
-    std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << dt.multiply(it).divide( static_cast<double>(5.0f) ).add( static_cast<double>(ft) ) << std::endl;
+    std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << dt.multiply(it).divide( static_cast<double>(5.0) ).add( static_cast<double>(ft) ) << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
     
