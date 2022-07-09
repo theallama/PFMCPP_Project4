@@ -323,7 +323,7 @@ int main()
     std::cout << "DoubleType add result=" << dt.add(2.0) << std::endl;
     std::cout << "DoubleType subtract result=" << dt.subtract(2.0) << std::endl;
     std::cout << "DoubleType multiply result=" << dt.multiply(2.0) << std::endl;
-    std::cout << "DoubleType divide result=" << dt.divide(5.f) << "\n" <<std::endl;
+    std::cout << "DoubleType divide result=" << dt.divide(static_cast<double>(5.f)) << "\n" <<std::endl;
 
     std::cout << "IntType add result=" << it.add(2) << std::endl;
     std::cout << "IntType subtract result=" << it.subtract(2) << std::endl;
@@ -343,7 +343,7 @@ int main()
     std::cout << "Initial value of it: " << it << std::endl;
     // --------
     std::cout << "Use of function concatenation (mixed type arguments) " << std::endl;
-    // std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << *(dt.multiply(it).divide(5.0f).add(ft).value) << std::endl;
+    std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << dt.multiply(it).divide( static_cast<double>(5.0f) ).add( static_cast<double>(ft) ) << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
     
