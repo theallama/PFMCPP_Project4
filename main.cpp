@@ -308,7 +308,7 @@ FloatType& FloatType::divide(float rhs)
 
 FloatType& FloatType::powInternal(const float f)
 {
-    *value = static_cast<float>(std::pow( *value, f ));
+    *value = std::pow( *value, f ); 
     return *this;
 }
 
@@ -367,7 +367,7 @@ DoubleType& DoubleType::divide(double rhs)
 
 DoubleType& DoubleType::powInternal(const double d)
 {
-    *value = static_cast<double>(std::pow( *value, d ));
+    *value = std::pow( *value, d ); 
     return *this;
 }
 
@@ -391,7 +391,7 @@ DoubleType& DoubleType::pow(const IntType& it)
     return powInternal(static_cast<double>(it));
 }
 
-//==========================IntTYpe==============================
+//==========================IntType==============================
 IntType& IntType::add(int rhs)
 {
     *value += rhs;
