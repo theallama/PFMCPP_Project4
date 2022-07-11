@@ -481,7 +481,7 @@ struct Point
 
     void toString()
     {
-        std::cout << "	Point {  x : " << x << " y : " << y << "}" << std::endl;  
+        std::cout << "Point { x: " << x << ", y: " << y << " }" << std::endl;  
     }
  
 
@@ -532,15 +532,15 @@ void part4()
     std::cout << "pow(ft1, ftExp) = " << ft1 << "^" << ftExp << " = " << ft1.pow(ftExp)  << std::endl;    
     std::cout << "pow(ft1, dtExp) = " << ft1 << "^" << dtExp << " = " << ft1.pow(dtExp)  << std::endl;    
     std::cout << "---------------------\n" << std::endl;  
-
+    
     // Power tests with DoubleType
     std::cout << "Power tests with DoubleType" << std::endl;
     std::cout << "pow(dt1, doubleExp) = " << dt1 << "^" << doubleExp << " = " << dt1.pow(intExp)  << std::endl;
     std::cout << "pow(dt1, itExp) = " << dt1 << "^" << itExp << " = " << dt1.pow(itExp)  << std::endl;
     std::cout << "pow(dt1, ftExp) = " << dt1 << "^" << ftExp << " = " << dt1.pow(ftExp)  << std::endl;    
     std::cout << "pow(dt1, dtExp) = " << dt1 << "^" << dtExp << " = " << dt1.pow(dtExp)  << std::endl;    
-    std::cout << "---------------------\n" << std::endl;    
-
+    std::cout << "---------------------\n" << std::endl;   
+    
     // Power tests with IntType
     std::cout << "Power tests with IntType" << std::endl;
     std::cout << "pow(it1, intExp) = " << it1 << "^" << intExp << " = " << it1.pow(intExp)  << std::endl;
