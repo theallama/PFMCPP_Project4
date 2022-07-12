@@ -632,20 +632,41 @@ int main()
     DoubleType dt ( 2 );
     IntType it ( 2 ) ;
 
-    std::cout << "FloatType add result=" << ( ft += 2.0f ) << std::endl;
-    std::cout << "FloatType subtract result=" << ( ft -= 2.0f ) << std::endl;
-    std::cout << "FloatType multiply result=" << ( ft *= 2.0f ) << std::endl;
-    std::cout << "FloatType divide result=" << ( ft /= 16.0f ) << "\n" <<std::endl;
+    ft += 2.0f;
+    std::cout << "FloatType add result=" << ft << std::endl;
 
-    std::cout << "DoubleType add result=" << ( dt += 2.0 ) << std::endl;
-    std::cout << "DoubleType subtract result=" << ( dt -= 2.0 ) << std::endl;
-    std::cout << "DoubleType multiply result=" << ( dt *= 2.0 ) << std::endl;
-    std::cout << "DoubleType divide result=" << ( dt /= static_cast<double>(5.f)) << "\n" <<std::endl;
+    ft -= 2.0f;
+    std::cout << "FloatType subtract result=" << ft << std::endl;
 
-    std::cout << "IntType add result=" << ( it += 2 ) << std::endl;
-    std::cout << "IntType subtract result=" << ( it -= 2 ) << std::endl;
-    std::cout << "IntType multiply result=" << ( it *= 2 ) << std::endl;
-    std::cout << "IntType divide result=" << ( it /= 3 ) << "\n" <<std::endl;
+    ft *= 2.0f;
+    std::cout << "FloatType multiply result=" << ft << std::endl;
+
+    ft /= 16.0f;
+    std::cout << "FloatType divide result=" << ft << "\n" <<std::endl;
+
+    dt += 2.0;
+    std::cout << "DoubleType add result=" << dt << std::endl;
+
+    dt -= 2.0;
+    std::cout << "DoubleType subtract result=" << dt << std::endl;
+
+    dt *= 2.0;
+    std::cout << "DoubleType multiply result=" << dt << std::endl;
+
+    dt /= static_cast<double>(5.f);
+    std::cout << "DoubleType divide result=" << dt << "\n" <<std::endl;
+
+    it += 2;
+    std::cout << "IntType add result=" << it << std::endl;
+
+    it -= 2;
+    std::cout << "IntType subtract result=" << it << std::endl;
+
+    it *= 2; 
+    std::cout << "IntType multiply result=" << it << std::endl;
+
+    it /= 3;
+    std::cout << "IntType divide result=" << it << "\n" <<std::endl;
 
     it *= 1000;
     it /= 2;
@@ -681,13 +702,13 @@ int main()
     // --------
     std::cout << "Intercept division by 0 " << std::endl;
 
-    
     std::cout << "New value of it = it / 0 = " << ( it /= 0 ) << std::endl;
-
-    std::cout << "New value of ft = ft / 0 = " << (ft /= 0) << std::endl;
-
-    std::cout << "New value of dt = dt / 0 = " << (dt /= 0) << std::endl;
-
+    
+    std::cout << "New value of ft = ft / 0 = " << ( ft /= 0 ) << std::endl;
+    
+    std::cout << "New value of dt = dt / 0 = " << ( dt /= 0 ) << std::endl;
+    
+    
     std::cout << "---------------------\n" << std::endl; 
 
     part3();
