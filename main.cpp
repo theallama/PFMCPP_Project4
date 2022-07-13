@@ -272,11 +272,7 @@ private:
 
 struct IntType
 {
-    explicit IntType(int lhs) : value( new int(lhs) ) {}
-    ~IntType()
-    {
-        delete value;
-    }
+    explicit IntType(int lhs) : value(std::make_unique<int>(lhs)) {}
 
     IntType& operator+=(int rhs);
     IntType& operator-=(int rhs);
@@ -297,7 +293,7 @@ struct IntType
     IntType& apply(void (*myFunc) (int&));
 
 private:
-    int* value = nullptr;
+    std::unique_ptr<int> value;
     IntType& powInternal(const int);
 };
 
