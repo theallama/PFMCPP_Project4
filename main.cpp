@@ -242,7 +242,7 @@ struct HeapA
 #include <memory>
 
 
-template<class T> //template class
+template<class T> 
 struct Numeric
 {
     using Type = T;
@@ -265,7 +265,7 @@ struct Numeric
         return *this;
     }
 
-//===========templated function
+
     template<class ParamType>
     Numeric& operator/=( ParamType rhs )
     {
@@ -294,19 +294,18 @@ struct Numeric
             return *this;
         }
 
-//===========
 
     operator Type() const
     {
         return *value;
     }
 
-    Numeric& pow(const Type& t) // use in class implementation for template class
+    Numeric& pow(const Type& t) 
     {
         return powInternal(t);
     }
 
-    Numeric& apply(std::function<Numeric&(T&)> myFunc) // use in class implementation for template class
+    Numeric& apply(std::function<Numeric&(T&)> myFunc) 
     {
         if(myFunc)
         {
@@ -316,7 +315,7 @@ struct Numeric
     }
 
 
-    Numeric& apply(void (* myFunc) (T&)) // use in class implementation for template class
+    Numeric& apply(void (* myFunc) (T&)) 
     {
         if(myFunc)
         {
@@ -326,10 +325,9 @@ struct Numeric
     }
 
 
-
 private:
     std::unique_ptr<T> value;
-    Numeric& powInternal(const T& t) // use in class implementation for template class
+    Numeric& powInternal(const T& t) 
     {
         *value = static_cast<Type>(std::pow( *value, t ));
         return *this;
@@ -337,9 +335,9 @@ private:
 
 };
 
-//==================================================================
-template<>
-struct Numeric<double>
+
+template<> 
+struct Numeric<double> 
 {
     using Type = double;
     explicit Numeric(Type lhs) : value(std::make_unique<Type>(lhs)) {}
@@ -401,8 +399,6 @@ struct Point
 {
     template<typename T>
     Point(T x_, T y_) : x(static_cast<float>(x_)), y(static_cast<float>(y_)) {}
-    // Point(DoubleType& x_, DoubleType& y_) : Point(static_cast<float>(x_), static_cast<float>(y_)) {}
-    // Point(IntType& x_, IntType& y_) :Point(static_cast<float>(x_), static_cast<float>(y_)) {}
 
     Point& multiply(float m)
     {
@@ -626,7 +622,7 @@ void myNumericFreeFunct(NumType& t)
 
 void part7()
 {
-    Numeric<float> ft3(3.0f); //no deduction guide for deduction of template arguments 
+    Numeric<float> ft3(3.0f); 
     Numeric<double> dt3(4.0);
     Numeric<int> it3(5);
     
@@ -634,8 +630,7 @@ void part7()
     std::cout << "ft3 before: " << ft3 << std::endl;
 
     {
-        // #4 // std::unique_ptr< decltype( <instance of class> )::Type >
-        using Type = decltype(ft3)::Type;  
+        using Type = decltype(ft3)::Type; //#4
         ft3.apply( [&](Type& t) -> Numeric<float>&
         {
             t += 7.f;
