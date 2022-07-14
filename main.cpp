@@ -265,7 +265,6 @@ struct Numeric
         return *this;
     }
 
-
     template<class ParamType>
     Numeric& operator/=( ParamType rhs )
     {
@@ -279,13 +278,13 @@ struct Numeric
                     return *this;
                 }
             }
-            else if (std::abs(rhs) <= std::numeric_limits<T>::epsilon())
+            else if (std::abs(rhs) <= std::numeric_limits<ParamType>::epsilon())
             {
                 std::cout << "can't divide integers by zero!\n";
                 return *this;
             }
         } 
-        else if (std::abs(rhs) <= std::numeric_limits<T>::epsilon())
+        else if (std::abs(rhs) <= std::numeric_limits<ParamType>::epsilon())
         {
             std::cout << "warning: floating point division by zero!" << std::endl;  
         }
