@@ -284,15 +284,15 @@ struct Numeric
                 std::cout << "can't divide integers by zero!\n";
                 return *this;
             }
-            } 
-            else if (std::abs(rhs) <= std::numeric_limits<T>::epsilon())
-            {
-                std::cout << "warning: floating point division by zero!" << std::endl;  
-            }
-           
-            *value /= rhs;
-            return *this;
+        } 
+        else if (std::abs(rhs) <= std::numeric_limits<T>::epsilon())
+        {
+            std::cout << "warning: floating point division by zero!" << std::endl;  
         }
+       
+        *value /= rhs;
+        return *this;
+    }
 
 
     operator Type() const
