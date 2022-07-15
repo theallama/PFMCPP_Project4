@@ -22,9 +22,6 @@ Create a branch named Part8
   
  1) Here is a starting point for how to implement your Temporary struct.
  */
-
-#include <typeinfo>
-template<typename NumericType>
 struct Temporary
 {
     Temporary(NumericType t) : v(t)
@@ -43,10 +40,14 @@ private:
     NumericType v;
 };
 
+
 /*
  2) add the definition of Temporary::counter here, which is a static variable and must be defined outside of the class.
     Remember the rules about how to define a Template member variable/function outside of the class.
 */
+
+template<typename NumericType>
+static Temporary<NumericType>::counter = 0;
 
 /*
  3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
@@ -244,16 +245,58 @@ struct HeapA
 #include <memory>
 
 
+ // Your job is to replace the owned type (the primitive specified by your template argument) from the Templated Class you created in Ch5 p04 with a struct named Temporary that can behave ENTIRELY as a temporary object.
+ 
+ // That means you must use conversion functions to interact with what it owns.
+ 
+ // You need to figure out how to use conversion functions to be able to GET and SET the 'value' member variable.
+ //    hint: conversion functions can return by value and also by ___...
+
+#include <typeinfo>
+template<typename NumericType>
+
+/==================1=====================
+struct Temporary
+{
+    Temporary(NumericType t) : v(t)
+    {
+        std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
+                  << counter++ << std::endl;
+    }
+    /*
+     revise these conversion functions to read/write to 'v' here
+     hint: what qualifier do read-only functions usually have?
+     */
+    operator NumericType&() const { return v;  } /* read-only function */
+    operator NumericType&() { return v; } /* read/write function */
+private:
+    static int counter;
+    NumericType v;
+};
+
+/==================2=====================
+template<typename NumericType>
+static Temporary<NumericType>::counter = 0;
+
+
+/==================3=====================
+ // template<typename OtherType>
+ //    Numeric& operator-=(const OtherType& o) 
+ //    { 
+ //        *value -= static_cast<NumericType>(o); 
+ //        return *this; 
+ //    }
 template<class T> 
 struct Numeric
 {
-    using Type = T;
+    using Type = Temporary<NumericType>;
 
     explicit Numeric(Type lhs) : value( std::make_unique<T>(lhs) ) {}
 
-    Numeric& operator+=(Type rhs)
+    template<typename OtherType>
+    Numeric& operator+=(const OtherType& o)
     {
-        *value += rhs; 
+        *value += static_cast<NumericType>(o); 
         return *this;
     }
     Numeric& operator-=(Type rhs)
