@@ -186,7 +186,7 @@ private:
 };
 
 template<typename NumericType>
-int Temporary<NumericType>::counter = 0; //requires a type specifier for all declarations
+int Temporary<NumericType>::counter = 0;
 
 //==========================================================
 template<class T> 
@@ -194,8 +194,6 @@ struct Numeric
 {
     using Type = Temporary<T>; //alias 
     explicit Numeric(Type lhs) : value( std::make_unique<Type>(lhs) ) {}
-// member initializer 'value' does not name a non-static data member or base class
-
 
     template<typename ParamType>
     Numeric& operator=( const ParamType& rhs )
@@ -249,12 +247,12 @@ struct Numeric
             std::cout << "warning: floating point division by zero!" << std::endl;  
         }
        
-        *value /= static_cast<T>(rhs); // expected '(' after 'static_cast'
+        *value /= static_cast<T>(rhs); 
         return *this;
     }
 
 
-    operator T() const  //T type parameter 
+    operator T() const  
     { 
         return *value;
     } 
@@ -280,12 +278,7 @@ struct Numeric
 
 
 private:
-    std::unique_ptr<Type> value; //  std::unique_ptr<T> value;
-    // Numeric& powInternal(const T& t) 
-    // {
-    //     *value = static_cast<Type>(std::pow( *value, t ));
-    //     return *this;
-    // }
+    std::unique_ptr<Type> value; 
 };
 
 //==========================================
@@ -317,8 +310,6 @@ struct Point
 private:
     float x{0}, y{0};
 };
-
-
 
 
 template<class NumType>
@@ -356,7 +347,7 @@ int main()
     i += 2.f; i -= f; i *= d; i /= 2.f;
     std::cout << "i: "<< i << std::endl;
     
-    Point p(static_cast<float>(f), static_cast<float>(i)); //casting //no matching constructor for initialization of 'Point'
+    Point p(static_cast<float>(f), static_cast<float>(i)); 
     p.toString();
     
     d *= -1;
@@ -370,7 +361,7 @@ int main()
     Numeric<float> floatNum(4.3f);
     Numeric<int> intNum(2);
     Numeric<int> intNum2(6);
-    intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3; //no viable overloaded '='
+    intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3; 
     std::cout << "intNum: " << intNum << std::endl;
     
     {
@@ -383,7 +374,7 @@ int main()
                 });
         std::cout << "f squared: " << f << std::endl;
 
-        f.apply( cube<Type> ); //use of undeclared identifier 'cube'
+        f.apply( cube<Type> ); 
         std::cout << "f cubed: " << f << std::endl;
     }
     
