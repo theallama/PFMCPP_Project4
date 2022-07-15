@@ -365,23 +365,35 @@ struct Numeric
         return *this;
     }
 /==================end of 3=====================
-    
-    Numeric& apply(std::function<Numeric&(T&)> myFunc) 
-    {
-        if(myFunc)
-        {
-            return myFunc(*value);
-        }
-        return *this;
-    }
+
+/*
+ 4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
+    replace the 2 apply() functions in your Numeric<T> with the single templated apply() function from the specialized <double> template.
+ */
+
+    // Numeric& apply(std::function<Numeric&(T&)> myFunc) 
+    // {
+    //     if(myFunc)
+    //     {
+    //         return myFunc(*value);
+    //     }
+    //     return *this;
+    // }
 
 
-    Numeric& apply(void (* myFunc) (T&)) 
+    // Numeric& apply(void (* myFunc) (T&)) 
+    // {
+    //     if(myFunc)
+    //     {
+    //         myFunc(*value);
+    //     }
+    //     return *this;
+    // 
+
+    template<typename FuncObj>
+    Numeric& apply(FuncObj freeFunc)
     {
-        if(myFunc)
-        {
-            myFunc(*value);
-        }
+        freeFunc(*value);
         return *this;
     }
 
@@ -397,61 +409,61 @@ private:
 };
 
 
-template<> 
-struct Numeric<double> 
-{
-    using Type = double;
-    explicit Numeric(Type lhs) : value(std::make_unique<Type>(lhs)) {}
+// template<> 
+// struct Numeric<double> 
+// {
+//     using Type = double;
+//     explicit Numeric(Type lhs) : value(std::make_unique<Type>(lhs)) {}
 
-    Numeric& operator+=( Type rhs )
-    {
-        *value += rhs; 
-        return *this;
-    }
-    Numeric& operator-=( Type rhs )
-    {
-        *value -= rhs; 
-        return *this;
-    }
-    Numeric& operator*=( Type rhs )
-    {
-        *value *= rhs; 
-        return *this;
-    }
+//     Numeric& operator+=( Type rhs )
+//     {
+//         *value += rhs; 
+//         return *this;
+//     }
+//     Numeric& operator-=( Type rhs )
+//     {
+//         *value -= rhs; 
+//         return *this;
+//     }
+//     Numeric& operator*=( Type rhs )
+//     {
+//         *value *= rhs; 
+//         return *this;
+//     }
 
-    Numeric& operator/=( Type rhs )
-    {
-        if(rhs == 0.0)
-        {
-            std::cout << "warning: floating point division by zero!" << std::endl; 
-        }
+//     Numeric& operator/=( Type rhs )
+//     {
+//         if(rhs == 0.0)
+//         {
+//             std::cout << "warning: floating point division by zero!" << std::endl; 
+//         }
 
-        *value /= rhs;
-        return *this;
-    }
+//         *value /= rhs;
+//         return *this;
+//     }
 
-    operator Type() const { return *value; }
+//     operator Type() const { return *value; }
 
-    Numeric& pow(const Type& t)
-    {
-        return powInternal(t);
-    }
+//     Numeric& pow(const Type& t)
+//     {
+//         return powInternal(t);
+//     }
 
-    template<typename T>
-    Numeric& apply(T freeFunc)
-    {
-        freeFunc(*value);
-        return *this;
-    }
+//     template<typename T>
+//     Numeric& apply(T freeFunc)
+//     {
+//         freeFunc(*value);
+//         return *this;
+//     }
 
-private:
-    std::unique_ptr<Type> value;
-    Numeric& powInternal(const Type& d)
-    {
-        *value = static_cast<Type>(std::pow( *value, d ));
-        return *this;
-    }
-};
+// private:
+//     std::unique_ptr<Type> value;
+//     Numeric& powInternal(const Type& d)
+//     {
+//         *value = static_cast<Type>(std::pow( *value, d ));
+//         return *this;
+//     }
+// };
 
 
 //==========================================
