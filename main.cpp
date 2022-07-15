@@ -357,6 +357,11 @@ struct Numeric
   //       *value *= static_cast<NumericType>(o); 
   //       return *this;
   //   }
+/*
+ 5) Template your pow() function the same way you templated the overloaded math operators
+    Remove the call to powInternal() and just call std::pow() directly.
+    you'll need to static_cast<> the pow() argument the same way you did in the overloaded math operators, when you pass it to std::pow()
+ */
 
     template<typename ParamType>
     Numeric& pow(const ParamType& pt) 
@@ -364,7 +369,7 @@ struct Numeric
         *value = static_cast<T>( std::pow( *value, static_cast<T>(pt) ) );
         return *this;
     }
-/==================end of 3=====================
+/==================end of 3, 5=====================
 
 /*
  4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
@@ -405,7 +410,6 @@ private:
         *value = static_cast<Type>(std::pow( *value, t ));
         return *this;
     }
-
 };
 
 
