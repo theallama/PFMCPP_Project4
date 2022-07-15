@@ -279,7 +279,7 @@ template<typename NumericType>
 static Temporary<NumericType>::counter = 0;
 
 
-/==================3=====================
+
  // template<typename OtherType>
  //    Numeric& operator-=(const OtherType& o) 
  //    { 
@@ -293,27 +293,35 @@ struct Numeric
 
     explicit Numeric(Type lhs) : value( std::make_unique<T>(lhs) ) {}
 
+/==================3=====================
     template<typename OtherType>
     Numeric& operator+=(const OtherType& o)
     {
         *value += static_cast<NumericType>(o); 
         return *this;
     }
-    Numeric& operator-=(Type rhs)
+    Numeric& operator-=(const OtherType& o)
     {
-        *value -= rhs; 
+        *value -= static_cast<NumericType>(o); 
         return *this;
     }
-    Numeric& operator*=(Type rhs)
+    Numeric& operator*=(const OtherType& o)
     {
-        *value *= rhs; 
+        *value *= static_cast<NumericType>(o); 
         return *this;
     }
 
+// template <class A, class B>
+// inline constexpr 
+//        bool is_same_v = is_same<A, B>::value
+
+
+// std::numeric_limits<T>::epsilon()
+
     template<class ParamType>
-    Numeric& operator/=( ParamType rhs )
+    Numeric& operator/= ( const ParamType rhs )
     {
-        if constexpr (std::is_same<Type, int>::value)
+        if constexpr (std::is_same<T, int>::value)
         {
             if constexpr (std::is_same<ParamType, int>::value)
             {
@@ -334,21 +342,30 @@ struct Numeric
             std::cout << "warning: floating point division by zero!" << std::endl;  
         }
        
-        *value /= rhs;
+        *value /= static_cast<T>rhs;  //use static_cast to convert whatever type is passed in to your template's NumericType
         return *this;
     }
 
 
-    operator Type() const
+    operator T() const
     {
         return *value;
     }
 
-    Numeric& pow(const Type& t) 
-    {
-        return powInternal(t);
-    }
+  // Numeric& operator*=(const OtherType& o)
+  //   {
+  //       *value *= static_cast<NumericType>(o); 
+  //       return *this;
+  //   }
 
+    template<typename ParamType>
+    Numeric& pow(const ParamType& pt) 
+    {
+        *value = static_cast<T>( std::pow( *value, static_cast<T>(pt) ) );
+        return *this;
+    }
+/==================end of 3=====================
+    
     Numeric& apply(std::function<Numeric&(T&)> myFunc) 
     {
         if(myFunc)
