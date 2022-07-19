@@ -124,6 +124,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 #include <typeinfo>
+#include <utility>
 
 
 
@@ -136,20 +137,27 @@ struct Temporary
                   << counter++ << std::endl;
     }
 
-    // Foo() {} //default ctor
-    // Foo(const Foo& other) {} //copy ctor
-    // Foo& operator = Foo(const Foo& other) {} //copy assignment operator 
-    // Foo (Foo&& other) {} //move ctor
-    // Foo& operator = Foo (Foo&& other) {} //move assignment ctr
-    // ~Foo() // dtor
+    //move ctr
+    Temporary (Temporary&& other) : v (std::move (other.v)) {}  //shallow copy 
 
-    operator NumericType&() const { return v;  } /* read-only function */
+    //move assignmnt operator 
+    Temporary& operator=(Temporary&& other) // rvalue reference
+    {
+        v = std::move(other.v); //expiring 
+        return *this;
+    }
+
+    //dtor
+    ~Temporary()
+    {
+    }
+
+    operator NumericType&() const { return v; } /* read-only function */
     operator NumericType&() { return v; } /* read/write function */
 
 private:
     static int counter;
     NumericType v;
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
@@ -160,11 +168,29 @@ template<typename NumericType>
 int Temporary<NumericType>::counter = 0;
 
 //==========================================================
+
 template<class T> 
 struct Numeric
 {
-    using Type = Temporary<T>; //alias 
-    explicit Numeric(Type lhs) : value( std::make_unique<Type>(lhs) ) {}
+    using Type = Temporary<T>; 
+    explicit Numeric(T lhs) : value( std::make_unique<Type>(lhs) ) {} 
+
+
+    //move ctr
+    Numeric(Numeric&& other) : value(std::move(other.value)) {}  
+    //move assignmnt operator 
+    Numeric& operator=(Numeric&& other)
+    {
+
+         value = std::move(other.value); 
+
+        return *this;
+    }
+
+    //dtor
+    ~Numeric()
+    {
+    }
 
     template<typename ParamType>
     Numeric& operator=( const ParamType& rhs )
@@ -251,7 +277,7 @@ struct Numeric
 private:
     std::unique_ptr<Type> value; 
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric) 
+JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 //==========================================
@@ -338,7 +364,7 @@ int main()
     std::cout << "intNum: " << intNum << std::endl;
     
     {
-        using Type = decltype(f)::Type;
+        using Type = decltype(f)::Type; 
         f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
                 {
                     auto& v = *value;
