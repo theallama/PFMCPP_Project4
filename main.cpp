@@ -13,13 +13,13 @@ Create a branch named Part9
  2) move these macros after the JUCE_LEAK_DETECTOR macro :
  */
 
-#define JUCE_DECLARE_NON_COPYABLE(className) \
-            className (const className&) = delete;\
-            className& operator= (const className&) = delete;
+// #define JUCE_DECLARE_NON_COPYABLE(className) \
+//             className (const className&) = delete;\
+//             className& operator= (const className&) = delete;
 
-#define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
-            JUCE_DECLARE_NON_COPYABLE(className) \
-            JUCE_LEAK_DETECTOR(className)
+// #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
+//             JUCE_DECLARE_NON_COPYABLE(className) \
+//             JUCE_LEAK_DETECTOR(className)
 
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
@@ -70,37 +70,37 @@ i cubed: 531441
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
 
-#include <typeinfo>
-#include <memory>
-#include<iostream>
-#include<cmath>
-#include <functional>
+// #include <typeinfo>
+// #include <memory>
+// #include<iostream>
+// #include<cmath>
+// #include <functional>
 
-template<typename NumericType>
-struct Temporary
-{
-    Temporary(NumericType t) : v(t)
-    {
-        std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
-                  << counter++ << std::endl;
-    }
+// template<typename NumericType>
+// struct Temporary
+// {
+//     Temporary(NumericType t) : v(t)
+//     {
+//         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
+//                   << counter++ << std::endl;
+//     }
 
-    operator NumericType() const 
-    { 
-        return v;
-    }
-    operator NumericType&() 
-    {
-       return v;
-    }
-private:
-    static int counter;
-    NumericType v;
-};
+//     operator NumericType() const 
+//     { 
+//         return v;
+//     }
+//     operator NumericType&() 
+//     {
+//        return v;
+//     }
+// private:
+//     static int counter;
+//     NumericType v;
+// };
 
 
-template<typename Type>
-int Temporary<Type>::counter = 0;
+// template<typename Type>
+// int Temporary<Type>::counter = 0;
 
 
 
@@ -118,15 +118,16 @@ int Temporary<Type>::counter = 0;
  Wait for my code review.
  */
 
-
+#include "LeakedObjectDetector.h"
 #include <iostream>
 #include <cmath> 
 #include <functional>
 #include <memory>
 #include <typeinfo>
+#include <utility>
 
 
-//==========================================================
+
 template<typename NumericType>
 struct Temporary
 {
@@ -135,26 +136,61 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
-    /*
-     revise these conversion functions to read/write to 'v' here
-     hint: what qualifier do read-only functions usually have?
-     */
-    operator NumericType&() const { return v;  } /* read-only function */
+
+    //move ctr
+    Temporary (Temporary&& other) : v (std::move (other.v)) {}  //shallow copy 
+
+    //move assignmnt operator 
+    Temporary& operator=(Temporary&& other) // rvalue reference
+    {
+        v = std::move(other.v); //expiring 
+        return *this;
+    }
+
+    //dtor
+    ~Temporary()
+    {
+    }
+
+    operator NumericType&() const { return v; } /* read-only function */
     operator NumericType&() { return v; } /* read/write function */
+
 private:
     static int counter;
     NumericType v;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
+
+
 
 template<typename NumericType>
 int Temporary<NumericType>::counter = 0;
 
 //==========================================================
+
 template<class T> 
 struct Numeric
 {
-    using Type = Temporary<T>; //alias 
-    explicit Numeric(Type lhs) : value( std::make_unique<Type>(lhs) ) {}
+    using Type = Temporary<T>; 
+    explicit Numeric(T lhs) : value( std::make_unique<Type>(lhs) ) {} 
+
+
+    //move ctr
+    Numeric(Numeric&& other) : value(std::move(other.value)) {}  
+    //move assignmnt operator 
+    Numeric& operator=(Numeric&& other)
+    {
+
+         value = std::move(other.value); 
+
+        return *this;
+    }
+
+    //dtor
+    ~Numeric()
+    {
+    }
 
     template<typename ParamType>
     Numeric& operator=( const ParamType& rhs )
@@ -240,6 +276,8 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> value; 
+
+JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 //==========================================
@@ -326,7 +364,7 @@ int main()
     std::cout << "intNum: " << intNum << std::endl;
     
     {
-        using Type = decltype(f)::Type;
+        using Type = decltype(f)::Type; 
         f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
                 {
                     auto& v = *value;
